@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Blox Fruits — Анкета гильдии | Проверка чекер/руками</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: пиратский стиль -->
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, #0c1120, #020408);
+            font-family: 'Poppins', sans-serif;
+            color: #eee9e0;
+            padding: 1.2rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quest-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(8, 16, 24, 0.85);
+            backdrop-filter: blur(14px);
+            border-radius: 56px;
+            border: 1px solid rgba(245, 176, 66, 0.5);
+            box-shadow: 0 30px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 215, 150, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(120deg, #1a2a2c, #0a1318);
+            padding: 1.5rem 1.8rem;
+            text-align: center;
+            border-bottom: 2px solid #f5b042;
+        }
+        .header h1 {
+            font-family: 'Pirata One', cursive;
+            font-size: 2.3rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #FFD966, #E6A017);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .step-progress {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .step-badge {
+            background: #0b1420;
+            border-radius: 60px;
+            padding: 4px 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f5b042;
+            border: 1px solid #f5b04255;
+        }
+        .progress-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #1e2a32;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #f5b042, #ffdd88);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .steps-wrapper {
+            padding: 2rem 2rem 2rem 2rem;
+        }
+        .step {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .step.active-step {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .form-group {
+            margin-bottom: 1.6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffecb3;
+        }
+        label i {
+            width: 24px;
+            color: #f5b042;
+        }
+        .required-star {
+            color: #ff8060;
+            margin-left: 4px;
+        }
+        input, select, textarea {
+            background: #0f1822;
+            border: 1px solid #2e3f4a;
+            border-radius: 40px;
+            padding: 12px 18px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            color: #f5f0e6;
+            transition: 0.2s;
+            outline: none;
+        }
+        input:focus, select:focus {
+            border-color: #f5b042;
+            box-shadow: 0 0 0 3px rgba(245,176,66,0.3);
+            background: #0e1824;
+        }
+        .range-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .range-group input {
+            flex: 1;
+        }
+        .range-value {
+            background: #1f2e36;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+            color: #f5b042;
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .radio-group label, .checkbox-group label {
+            font-weight: normal;
+            gap: 8px;
+            cursor: pointer;
+        }
+        input[type="radio"], input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #f5b042;
+        }
+
+        /* файл */
+        .file-area {
+            border: 2px dashed #4a5e6b;
+            border-radius: 32px;
+            padding: 16px;
+            text-align: center;
+            background: #0a111c;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .file-area:hover {
+            border-color: #f5b042;
+            background: #111c2a;
+        }
+        .photo-preview {
+            margin-top: 14px;
+            display: flex;
+            justify-content: center;
+        }
+        .photo-preview img {
+            max-width: 100%;
+            max-height: 160px;
+            border-radius: 28px;
+            border: 2px solid #f5b042;
+            object-fit: cover;
+            background: #00000066;
+        }
+
+        /* гайд блок */
+        .guide-block {
+            background: #0c1420dd;
+            border-radius: 32px;
+            padding: 16px 20px;
+            margin-top: 15px;
+            border-left: 6px solid #f5b042;
+        }
+        .guide-title {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #f5b042;
+        }
+        .video-embed {
+            margin-top: 12px;
+            border-radius: 28px;
+            overflow: hidden;
+            background: #00000066;
+            padding: 8px;
+            text-align: center;
+        }
+        .video-embed iframe {
+            width: 100%;
+            max-width: 560px;
+            height: 200px;
+            border-radius: 20px;
+            border: none;
+        }
+        .drive-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1f2e3a;
+            padding: 8px 16px;
+            border-radius: 60px;
+            color: #ffd966;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+        .drive-link:hover {
+            background: #f5b04222;
+            color: #f5b042;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 12px;
+        }
+        .btn {
+            background: #19262e;
+            border: none;
+            padding: 10px 22px;
+            font-weight: 600;
+            border-radius: 40px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #f0ede8;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(95deg, #e6a017, #c97e0a);
+            color: #0c0f14;
+            font-weight: bold;
+            box-shadow: 0 5px 0 #7a3e00;
+        }
+        .btn-primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #7a3e00;
+        }
+        .btn-secondary {
+            background: #2a3a42;
+            border: 1px solid #f5b04255;
+        }
+        .alert-message {
+            background: #1f2a2e;
+            border-left: 6px solid #f5b042;
+            padding: 10px 16px;
+            border-radius: 28px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert-error {
+            border-left-color: #e34234;
+            background: #2c1a1a;
+        }
+        .alert-success {
+            border-left-color: #3cb371;
+            background: #1d3824;
+        }
+        .review-block {
+            background: #0c1420cc;
+            border-radius: 32px;
+            padding: 16px;
+            margin-top: 10px;
+        }
+        .review-item {
+            margin: 8px 0;
+            border-bottom: 1px solid #2e414d;
+            padding: 8px 0;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 1rem;
+            opacity: 0.6;
+            border-top: 1px solid #2f404a;
+        }
+        @media (max-width: 550px) {
+            .steps-wrapper { padding: 1.5rem; }
+            .header h1 { font-size: 1.7rem; }
+            .video-embed iframe { height: 160px; }
+        }
+    </style>
+</head>
+<body>
+<div class="quest-container">
+    <div class="header">
+        <h1><i class="fas fa-skull-crossbow"></i> BLOX FRUITS <i class="fas fa-apple-alt"></i></h1>
+        <div class="step-progress">
+            <span class="step-badge" id="stepCounter">Шаг 1 / 7</span>
+            <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <p style="margin-top: 8px; font-size: 0.8rem;">⚔️ Анкета для входа в закрытый канал гильдии ⚔️</p>
+    </div>
+
+    <div class="steps-wrapper" id="stepsWrapper">
+        <!-- ШАГ 1: Discord + Roblox -->
+        <div class="step" data-step="1">
+            <div class="form-group">
+                <label><i class="fab fa-discord"></i> Ваш Discord тег <span class="required-star">*</span></label>
+                <input type="text" id="discordTag" placeholder="например: pirate_king#1234">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-user-astronaut"></i> Roblox никнейм <span class="required-star">*</span></label>
+                <input type="text" id="robloxName" placeholder="Ваш ник в Roblox">
+            </div>
+        </div>
+
+        <!-- ШАГ 2: Баунти + фото -->
+        <div class="step" data-step="2">
+            <div class="form-group">
+                <label><i class="fas fa-trophy"></i> Сколько у вас баунти? <span class="required-star">*</span></label>
+                <input type="text" id="bounty" placeholder="Например: 12,000,000">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-camera"></i> Фото с доказательством (скрин баунти) <span class="required-star">*</span></label>
+                <div class="file-area" id="fileDropArea">
+                    <i class="fas fa-cloud-upload-alt"></i> Нажмите или перетащите изображение
+                    <input type="file" id="bountyProof" accept="image/*" style="display: none;">
+                </div>
+                <div class="photo-preview" id="photoPreview"></div>
+            </div>
+        </div>
+
+        <!-- ШАГ 3: Возраст, уровень, время игры -->
+        <div class="step" data-step="3">
+            <div class="form-group">
+                <label><i class="fas fa-calendar-alt"></i> Сколько вам лет <span class="required-star">*</span></label>
+                <input type="number" id="age" placeholder="Ваш возраст (любой)" value="16">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-chart-line"></i> Какой у вас уровень в Blox Fruits? <span class="required-star">*</span></label>
+                <input type="text" id="level" placeholder="Например: 2450">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-hourglass-half"></i> Сколько играете в БФ? <span class="required-star">*</span></label>
+                <input type="text" id="playtime" placeholder="6 месяцев, 2 года...">
+            </div>
+        </div>
+
+        <!-- ШАГ 4: Оценка команда и соло -->
+        <div class="step" data-step="4">
+            <div class="form-group">
+                <label><i class="fas fa-users"></i> Оцените свою игру в команде (1-10) <span class="required-star">*</span></label>
+                <div class="range-group">
+                    <input type="range" id="teamPlay" min="1" max="10" value="7" step="1">
+                    <span class="range-value" id="teamValue">7</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-user-ninja"></i> Оцените свою игру в соло (1-10) <span class="required-star">*</span></label>
+                <div class="range-group">
+                    <input type="range" id="soloPlay" min="1" max="10" value="6" step="1">
+                    <span class="range-value" id="soloValue">6</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ШАГ 5: Старшие по званию -->
+        <div class="step" data-step="5">
+            <div class="form-group">
+                <label><i class="fas fa-gavel"></i> Готовы ли вы слушаться старших по званию? <span class="required-star">*</span></label>
+                <div class="radio-group">
+                    <label><input type="radio" name="obeySenior" value="Да, полностью"> Да, полностью</label>
+                    <label><input type="radio" name="obeySenior" value="Нет, не готов"> Нет</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ШАГ 6: НОВЫЙ ВОПРОС - как проверять? (ручками/чекер) + гайд с видео -->
+        <div class="step" data-step="6">
+            <div class="form-group">
+                <label><i class="fas fa-shield-alt"></i> Как вас проверять на читы? <span class="required-star">*</span></label>
+                <div class="radio-group" id="checkMethodGroup">
+                    <label><input type="radio" name="checkMethod" value="Ручная проверка (админ посмотрит)"> ✋ Ручками (тщательная проверка админом)</label>
+                    <label><input type="radio" name="checkMethod" value="Через WChecker"> 🤖 Через чекер (WChecker)</label>
+                </div>
+                <small style="opacity:0.75; margin-top: 4px;">Выберите удобный способ верификации</small>
+            </div>
+
+            <!-- ГАЙД с видео (под чекером) -->
+            <div class="guide-block" id="guideBlock">
+                <div class="guide-title">
+                    <i class="fab fa-youtube"></i> 📘 Гайд по проверке (WChecker и подготовка)
+                </div>
+                <p style="font-size: 0.85rem; margin-bottom: 10px;">Для прохождения через чекер или ручной проверки — ознакомьтесь с инструкцией:</p>
+                <div class="video-embed">
+                    <!-- Прямая вставка видео через Google Drive embed (поддерживается если доступ к просмотру открыт) -->
+                    <iframe src="https://drive.google.com/file/d/1wAEWUhcv_gBBy6dpQzQjEFQ3q7PFK4Sr/preview" allow="autoplay" allowfullscreen></iframe>
+                </div>
+                <div style="margin-top: 12px;">
+                    <a href="https://drive.google.com/file/d/1wAEWUhcv_gBBy6dpQzQjEFQ3q7PFK4Sr/view" target="_blank" class="drive-link" rel="noopener noreferrer">
+                        <i class="fab fa-google-drive"></i> Открыть видео в Google Drive (полный экран)
+                    </a>
+                </div>
+                <hr style="margin: 12px 0; border-color:#2e414d;">
+                <p style="font-size: 0.75rem; opacity:0.8;"><i class="fas fa-info-circle"></i> Гайд содержит: установку WChecker, скриншоты, и порядок проверки. Ручная проверка займёт больше времени, но тоже возможна.</p>
+            </div>
+        </div>
+
+        <!-- ШАГ 7: Финальный просмотр и отправка -->
+        <div class="step" data-step="7">
+            <h4 style="margin-bottom: 12px;"><i class="fas fa-scroll"></i> Проверьте данные перед отправкой</h4>
+            <div class="review-block" id="reviewData"></div>
+            <div id="reviewPhotoBlock" style="margin-top: 12px; text-align: center;"></div>
+            <div id="reviewCheckMethod" style="margin-top: 12px; background: #0f1822; border-radius: 24px; padding: 12px;"></div>
+        </div>
+
+        <!-- Кнопки навигации -->
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" id="prevBtn" disabled><i class="fas fa-arrow-left"></i> Назад</button>
+            <button class="btn btn-primary" id="nextBtn">Далее <i class="fas fa-arrow-right"></i></button>
+        </div>
+        <div id="globalAlert" class="alert-message"></div>
+    </div>
+    <div class="footer">
+        <i class="fab fa-discord"></i> После отправки заявки администратор свяжется с вами согласно выбранному способу проверки.
+    </div>
+</div>
+
+<script>
+    // ФИКСИРОВАННЫЙ WEBHOOK
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1493453883404456089/2y8f4QGsXKj1AiQkN7WCl72R2LAdlU2n5z1Q2c4_G30DiMYfNs9mlopcwNt6RzTUjNJB";
+    
+    // DOM элементы
+    const steps = document.querySelectorAll('.step');
+    let currentStep = 1;
+    const totalSteps = steps.length;
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const stepCounterSpan = document.getElementById('stepCounter');
+    const progressFill = document.getElementById('progressFill');
+    const globalAlert = document.getElementById('globalAlert');
+
+    // Поля
+    const discordTag = document.getElementById('discordTag');
+    const robloxName = document.getElementById('robloxName');
+    const bounty = document.getElementById('bounty');
+    const bountyProof = document.getElementById('bountyProof');
+    const age = document.getElementById('age');
+    const level = document.getElementById('level');
+    const playtime = document.getElementById('playtime');
+    const teamSlider = document.getElementById('teamPlay');
+    const teamValue = document.getElementById('teamValue');
+    const soloSlider = document.getElementById('soloPlay');
+    const soloValue = document.getElementById('soloValue');
+    const obeyRadios = document.querySelectorAll('input[name="obeySenior"]');
+    const checkRadios = document.querySelectorAll('input[name="checkMethod"]');
+    const photoPreviewDiv = document.getElementById('photoPreview');
+    const fileArea = document.getElementById('fileDropArea');
+
+    let currentPhotoFile = null;
+    let photoPreviewUrl = null;
+
+    function showAlert(message, type = 'error', timeout = 4000) {
+        globalAlert.style.display = 'flex';
+        globalAlert.className = `alert-message ${type === 'error' ? 'alert-error' : 'alert-success'}`;
+        globalAlert.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${message}`;
+        if (timeout) setTimeout(() => { globalAlert.style.display = 'none'; }, timeout);
+    }
+
+    function clearAlert() { globalAlert.style.display = 'none'; }
+
+    // слайдеры
+    teamSlider.addEventListener('input', () => { teamValue.textContent = teamSlider.value; });
+    soloSlider.addEventListener('input', () => { soloValue.textContent = soloSlider.value; });
+
+    // фото
+    function handleFileSelected(file) {
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            showAlert('Нужно загрузить изображение (скриншот баунти)', 'error');
+            return;
+        }
+        if (file.size > 8 * 1024 * 1024) {
+            showAlert('Файл больше 8 МБ, сожмите', 'error');
+            return;
+        }
+        currentPhotoFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            photoPreviewUrl = e.target.result;
+            photoPreviewDiv.innerHTML = `<img src="${photoPreviewUrl}" alt="доказательство">`;
+        };
+        reader.readAsDataURL(file);
+    }
+    bountyProof.addEventListener('change', (e) => {
+        if (bountyProof.files.length) handleFileSelected(bountyProof.files[0]);
+        else { currentPhotoFile = null; photoPreviewDiv.innerHTML = ''; }
+    });
+    fileArea.addEventListener('click', () => bountyProof.click());
+    fileArea.addEventListener('dragover', (e) => { e.preventDefault(); fileArea.style.borderColor = '#f5b042'; });
+    fileArea.addEventListener('dragleave', () => fileArea.style.borderColor = '#4a5e6b');
+    fileArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileArea.style.borderColor = '#4a5e6b';
+        if (e.dataTransfer.files.length) {
+            bountyProof.files = e.dataTransfer.files;
+            handleFileSelected(e.dataTransfer.files[0]);
+        }
+    });
+
+    function validateStep(step) {
+        clearAlert();
+        if (step === 1) {
+            if (!discordTag.value.trim()) { showAlert('Укажите Discord тег'); discordTag.focus(); return false; }
+            if (!robloxName.value.trim()) { showAlert('Укажите Roblox ник'); robloxName.focus(); return false; }
+            return true;
+        }
+        if (step === 2) {
+            if (!bounty.value.trim()) { showAlert('Напишите количество баунти'); bounty.focus(); return false; }
+            if (!currentPhotoFile) { showAlert('Загрузите скриншот с доказательством баунти'); return false; }
+            return true;
+        }
+        if (step === 3) {
+            if (!age.value.trim() || isNaN(parseInt(age.value))) { showAlert('Укажите возраст'); age.focus(); return false; }
+            if (!level.value.trim()) { showAlert('Уровень в Blox Fruits'); level.focus(); return false; }
+            if (!playtime.value.trim()) { showAlert('Сколько играете?'); playtime.focus(); return false; }
+            return true;
+        }
+        if (step === 4) return true;
+        if (step === 5) {
+            let obeyOk = false;
+            obeyRadios.forEach(r => { if(r.checked) obeyOk = true; });
+            if (!obeyOk) { showAlert('Выберите, готовы ли слушаться старших'); return false; }
+            return true;
+        }
+        if (step === 6) {
+            let checkSelected = false;
+            checkRadios.forEach(r => { if(r.checked) checkSelected = true; });
+            if (!checkSelected) { showAlert('Выберите способ проверки: ручками или через чекер'); return false; }
+            return true;
+        }
+        return true;
+    }
+
+    function updateReview() {
+        const obeyValue = document.querySelector('input[name="obeySenior"]:checked')?.value || '—';
+        const checkValue = document.querySelector('input[name="checkMethod"]:checked')?.value || 'Не выбран';
+        reviewDataDiv.innerHTML = `
+            <div class="review-item"><strong><i class="fab fa-discord"></i> Discord:</strong> ${escapeHtml(discordTag.value.trim())}</div>
+            <div class="review-item"><strong><i class="fas fa-user"></i> Roblox:</strong> ${escapeHtml(robloxName.value.trim())}</div>
+            <div class="review-item"><strong><i class="fas fa-coins"></i> Баунти:</strong> ${escapeHtml(bounty.value.trim())}</div>
+            <div class="review-item"><strong><i class="fas fa-calendar"></i> Возраст:</strong> ${escapeHtml(age.value)} лет</div>
+            <div class="review-item"><strong><i class="fas fa-chart-simple"></i> Уровень:</strong> ${escapeHtml(level.value.trim())}</div>
+            <div class="review-item"><strong><i class="fas fa-clock"></i> В игре:</strong> ${escapeHtml(playtime.value.trim())}</div>
+            <div class="review-item"><strong><i class="fas fa-handshake"></i> Команда:</strong> ${teamSlider.value}/10 &nbsp;&nbsp;| <strong>Соло:</strong> ${soloSlider.value}/10</div>
+            <div class="review-item"><strong><i class="fas fa-crown"></i> Слушается старших:</strong> ${obeyValue}</div>
+        `;
+        document.getElementById('reviewCheckMethod').innerHTML = `<div class="review-item"><strong><i class="fas fa-shield-virus"></i> Способ проверки на читы:</strong> ${escapeHtml(checkValue)}</div><div class="review-item"><small>✅ Гайд с видео прилагается (ссылка выше)</small></div>`;
+        if (photoPreviewUrl) {
+            document.getElementById('reviewPhotoBlock').innerHTML = `<img src="${photoPreviewUrl}" style="max-width:100%; max-height:140px; border-radius: 20px; border:2px solid #f5b042;">`;
+        } else if (currentPhotoFile) {
+            const tmpUrl = URL.createObjectURL(currentPhotoFile);
+            document.getElementById('reviewPhotoBlock').innerHTML = `<img src="${tmpUrl}" style="max-width:100%; max-height:140px; border-radius: 20px;">`;
+        } else {
+            document.getElementById('reviewPhotoBlock').innerHTML = '<p style="color:#ffaa88;">⚠️ Фото баунти не загружено</p>';
+        }
+    }
+
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m=='&') return '&amp;'; if(m=='<') return '&lt;'; if(m=='>') return '&gt;'; return m;}); }
+
+    function goToStep(step) {
+        if (step < 1 || step > totalSteps) return;
+        if (step > currentStep) {
+            if (!validateStep(currentStep)) return;
+        }
+        steps.forEach((st, idx) => {
+            if (idx+1 === step) st.classList.add('active-step');
+            else st.classList.remove('active-step');
+        });
+        currentStep = step;
+        stepCounterSpan.innerText = `Шаг ${currentStep} / ${totalSteps}`;
+        const percent = ((currentStep - 1) / (totalSteps - 1)) * 100;
+        progressFill.style.width = `${percent}%`;
+        prevBtn.disabled = (currentStep === 1);
+        if (currentStep === totalSteps) {
+            nextBtn.innerHTML = '📤 Отправить заявку <i class="fas fa-paper-plane"></i>';
+            updateReview();
+        } else {
+            nextBtn.innerHTML = 'Далее <i class="fas fa-arrow-right"></i>';
+        }
+    }
+
+    async function sendApplication() {
+        // валидация последнего шага (способ проверки)
+        let checkSelected = false;
+        checkRadios.forEach(r => { if(r.checked) checkSelected = true; });
+        if (!checkSelected) { showAlert('Выберите способ проверки (ручками или чекер) на шаге 6', 'error'); goToStep(6); return; }
+        if (!currentPhotoFile) { showAlert('Фото баунти отсутствует', 'error'); goToStep(2); return; }
+
+        const obeySelected = document.querySelector('input[name="obeySenior"]:checked')?.value || '—';
+        const checkMethod = document.querySelector('input[name="checkMethod"]:checked')?.value || '—';
+
+        const embed = {
+            title: "⚓ НОВАЯ ЗАЯВКА В ГИЛЬДИЮ BLOX FRUITS",
+            color: 0xf5b042,
+            timestamp: new Date().toISOString(),
+            fields: [
+                { name: "🎮 Discord тег", value: discordTag.value.trim(), inline: true },
+                { name: "🏴‍☠️ Roblox ник", value: robloxName.value.trim(), inline: true },
+                { name: "💰 Баунти", value: bounty.value.trim(), inline: true },
+                { name: "📅 Возраст", value: age.value.trim(), inline: true },
+                { name: "📊 Уровень", value: level.value.trim(), inline: true },
+                { name: "⏱️ Время в БФ", value: playtime.value.trim(), inline: true },
+                { name: "🤝 Команда/Соло", value: `${teamSlider.value}/10 | ${soloSlider.value}/10`, inline: true },
+                { name: "👑 Слушается старших", value: obeySelected, inline: true },
+                { name: "🛡️ Способ проверки", value: checkMethod, inline: false },
+                { name: "📘 Гайд", value: "[Видео-инструкция (Google Drive)](https://drive.google.com/file/d/1wAEWUhcv_gBBy6dpQzQjEFQ3q7PFK4Sr/view)", inline: false }
+            ],
+            footer: { text: "Выбран способ проверки, администратор свяжется" }
+        };
+        const formData = new FormData();
+        formData.append("payload_json", JSON.stringify({ embeds: [embed] }));
+        formData.append("file", currentPhotoFile, `bounty_${robloxName.value.trim() || 'player'}.png`);
+
+        try {
+            nextBtn.disabled = true;
+            nextBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Отправка...';
+            const response = await fetch(WEBHOOK_URL, { method: "POST", body: formData });
+            if (response.ok) {
+                showAlert('✅ Заявка отправлена! Администратор свяжется согласно выбранному способу проверки.', 'success', 6000);
+                setTimeout(() => { resetForm(); goToStep(1); }, 2500);
+            } else {
+                let errTxt = await response.text().catch(()=>'');
+                console.error(errTxt);
+                showAlert(`Ошибка отправки (${response.status}). Повторите позже.`, 'error');
+            }
+        } catch(e) {
+            showAlert('Ошибка сети или webhook недоступен', 'error');
+        } finally {
+            nextBtn.disabled = false;
+            nextBtn.innerHTML = 'Отправить заявку <i class="fas fa-paper-plane"></i>';
+        }
+    }
+
+    function resetForm() {
+        discordTag.value = '';
+        robloxName.value = '';
+        bounty.value = '';
+        age.value = '16';
+        level.value = '';
+        playtime.value = '';
+        teamSlider.value = '7'; teamValue.textContent = '7';
+        soloSlider.value = '6'; soloValue.textContent = '6';
+        obeyRadios.forEach(r => r.checked = false);
+        checkRadios.forEach(r => r.checked = false);
+        bountyProof.value = '';
+        currentPhotoFile = null;
+        photoPreviewUrl = null;
+        photoPreviewDiv.innerHTML = '';
+        document.getElementById('reviewPhotoBlock').innerHTML = '';
+        clearAlert();
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (currentStep === totalSteps) sendApplication();
+        else {
+            if (validateStep(currentStep)) goToStep(currentStep + 1);
+        }
+    });
+    prevBtn.addEventListener('click', () => { if (currentStep > 1) goToStep(currentStep - 1); });
+
+    goToStep(1);
+</script>
+</body>
+</html>
